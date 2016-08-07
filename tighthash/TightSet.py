@@ -1,6 +1,8 @@
 
 import array
 import random
+import itertools
+
 
 _primes=[419,421,431,463,467,557,563,569,673,677,683,691,701,709,719,727,733 ,739,743,751,773,787,797,809,811,821,823,827,829,839,853,857,859,863,877,881,947,953,967,971,977,983,991,997,1009,1013]
 
@@ -10,12 +12,12 @@ class TightHashSet:
       self.size=start_size
       self.min_factor=min_factor
       self.key_type=key_type
-      self.arr=array.array(self.key_type, self.size)
-      self.mult=randome.choice(_primes)
-      self.add=random.randint(100, 2000)
+      self.arr=array.array(self.key_type, itertools.repeat(0, self.size))
+      self.mult=random.choice(_primes)
+      self._add=random.randint(100, 2000)
  
     def get_hash(self, val):
-        return (self.mult*hash(val)+self.add)%self.size
+        return (self.mult*hash(val)+self._add)%self.size
       
         
     def add(self, val):
@@ -23,7 +25,7 @@ class TightHashSet:
         if self.cnt==self.size:
             raise Exception("No place left")
             
-        while not self.arr[val_hash]:
+        while self.arr[val_hash]:
             if val_hash==self.size-1:
                 val_hash=0
             else: val_hash+=1
@@ -36,7 +38,7 @@ class TightHashSet:
         if self.cnt==self.size:
             raise Exception("No place left")
             
-        while not self.arr[val_hash]:
+        while self.arr[val_hash]:
             if self.arr[val_hash]==val:
                 return True
             if val_hash==self.size-1:
@@ -45,8 +47,7 @@ class TightHashSet:
         
         return False
         
-    def __contains__(self):
-        
+    def __len__(self):     
         return self.cnt
         
 
