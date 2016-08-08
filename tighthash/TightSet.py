@@ -32,6 +32,7 @@ class TightHashSet:
         
         self.cnt+=1
         self.arr[val_hash]=val
+        return True
 
     def __contains__(self, val):
         val_hash=self.get_hash(val)
