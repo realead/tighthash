@@ -48,4 +48,12 @@ class ThightHashSetTester(unittest.TestCase):
         self.assertTrue(s.add(-500000))
         self.assertEquals(len(s), 2)
         
+         
+    def test_insert_zero(self):
+        s=Set()
+        self.assertTrue(s.add(0))
+        self.assertEquals(len(s),1) 
+        self.assertFalse(s.add(0))
+        self.assertEquals(len(s),1) 
         
+              

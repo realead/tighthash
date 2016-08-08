@@ -13,6 +13,7 @@ class TightHashSet:
       self.min_factor=min_factor
       self.key_type=key_type
       self.arr=array.array(self.key_type, itertools.repeat(0, self.size))
+      self.contains_zero=False
       self.mult=random.choice(_primes)
       self._add=random.randint(100, 2000)
  
@@ -21,6 +22,13 @@ class TightHashSet:
       
         
     def add(self, val):
+        #the special case -> 0, in the array it means empty space
+        if not val:
+           result=not self.contains_zero
+           self.contains_zero=True
+           return result
+        
+        #all values except 0:
         val_hash=self.get_hash(val)
         if self.cnt==self.size:
             raise Exception("No place left")
@@ -51,6 +59,6 @@ class TightHashSet:
         return False
         
     def __len__(self):     
-        return self.cnt
+        return self.cnt+self.contains_zero
         
 
