@@ -26,6 +26,8 @@ class TightHashSet:
             raise Exception("No place left")
             
         while self.arr[val_hash]:
+            if val==self.arr[val_hash]:
+                return False #already in the set
             if val_hash==self.size-1:
                 val_hash=0
             else: val_hash+=1

@@ -34,3 +34,12 @@ class ThightHashSetTester(unittest.TestCase):
         self.assertTrue(123 in s)
         self.assertTrue(985 in s)
         self.assertFalse(4 in s)
+        
+           
+    def test_insert_twice(self):
+        s=Set()
+        self.assertTrue(s.add(5))
+        self.assertFalse(s.add(5))
+        self.assertEquals(len(s), 1)
+        
+        
