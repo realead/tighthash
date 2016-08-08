@@ -45,6 +45,11 @@ class TightHashSet:
         return True
 
     def __contains__(self, val):
+        #the special case -> 0, in the array it means empty space
+        if not val:
+            return self.contains_zero
+        
+        #all values except 0:    
         val_hash=self.get_hash(val)
         if self.cnt==self.size:
             raise Exception("No place left")
