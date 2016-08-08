@@ -42,4 +42,10 @@ class ThightHashSetTester(unittest.TestCase):
         self.assertFalse(s.add(5))
         self.assertEquals(len(s), 1)
         
+    def test_insert_negative(self):
+        s=Set()
+        self.assertTrue(s.add(-5))
+        self.assertTrue(s.add(-500000))
+        self.assertEquals(len(s), 2)
+        
         
