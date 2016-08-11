@@ -1,7 +1,6 @@
 
 import array
 import random
-import itertools
 import math
 
 
@@ -14,7 +13,7 @@ class TightHashSet:
       self.min_factor=min_factor
       self.key_type=key_type
       self.increase_factor=increase_factor
-      self.arr=array.array(self.key_type, itertools.repeat(0, self.size))
+      self.arr=array.array(self.key_type, [0])*self.size
       self.contains_zero=False
       self.mult=random.choice(_primes)
       self._add=random.randint(100, 2000)
@@ -26,7 +25,7 @@ class TightHashSet:
         old_arr=self.arr
         
         self.size=new_size
-        self.arr=array.array(self.key_type, itertools.repeat(0, self.size))
+        self.arr=array.array(self.key_type, [0])*self.size
         
         for val in old_arr:
             self.add(val)
