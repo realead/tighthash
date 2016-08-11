@@ -8,7 +8,7 @@ _primes=[419,421,431,463,467,557,563,569,673,677,683,691,701,709,719,727,733 ,73
 
 class TightHashSet:
     def __init__(self, start_size=10, min_factor=1.5, key_type='i'):
-      self.cnt=0
+      self.__cnt=0
       self.size=start_size
       self.min_factor=min_factor
       self.key_type=key_type
@@ -30,7 +30,7 @@ class TightHashSet:
         
         #all values except 0:
         val_hash=self.get_hash(val)
-        if self.cnt==self.size:
+        if self.__cnt==self.size:
             raise Exception("No place left")
             
         while self.arr[val_hash]:
@@ -40,7 +40,7 @@ class TightHashSet:
                 val_hash=0
             else: val_hash+=1
         
-        self.cnt+=1
+        self.__cnt+=1
         self.arr[val_hash]=val
         return True
 
@@ -51,8 +51,6 @@ class TightHashSet:
         
         #all values except 0:    
         val_hash=self.get_hash(val)
-        if self.cnt==self.size:
-            raise Exception("No place left")
             
         while self.arr[val_hash]:
             if self.arr[val_hash]==val:
@@ -64,6 +62,6 @@ class TightHashSet:
         return False
         
     def __len__(self):     
-        return self.cnt+self.contains_zero
+        return self.__cnt+self.contains_zero
         
 
