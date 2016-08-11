@@ -71,4 +71,11 @@ class ThightHashSetTester(unittest.TestCase):
         self.assertTrue(s.add(0))
         self.assertEquals(len(s),3) 
         self.assertTrue(0 in s)   
-              
+ 
+         
+    def test_preallocated_size(self):
+        s=Set(30)
+        self.assertEquals(s.get_preallocated_size(), 30)
+        
+        
+                     

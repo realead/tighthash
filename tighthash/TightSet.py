@@ -64,4 +64,5 @@ class TightHashSet:
     def __len__(self):     
         return self.__cnt+self.contains_zero
         
-
+    def get_preallocated_size(self):
+        return len(self.arr)
