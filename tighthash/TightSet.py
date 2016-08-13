@@ -9,23 +9,31 @@ _primes=[419,421,431,463,467,557,563,569,673,677,683,691,701,709,719,727,733 ,73
 class TightHashSet:
     def __init__(self, start_size=10, min_factor=1.5, key_type='i', increase_factor=1.2):
       self.__cnt=0
-      self.size=start_size
       self.min_factor=min_factor
       self.key_type=key_type
       self.increase_factor=increase_factor
-      self.arr=array.array(self.key_type, [0])*self.size
+      self.size=self.ini_array(start_size)
       self.contains_zero=False
       self.mult=random.choice(_primes)
       self._add=random.randint(100, 2000)
- 
+      
+      
+    def ini_array(self, minimal_size):
+        if minimal_size<100:
+            self.arr=array.array(self.key_type, [0])*minimal_size
+            return minimal_size
+        else:
+            repeat=(minimal_size+99)//100
+            self.arr=(array.array(self.key_type,[0])*100)*repeat
+            return repeat*100
+            
     def get_hash(self, val):
         return (self.mult*hash(val)+self._add)%self.size
       
-    def __realocate(self, new_size):
+    def __realocate(self, new_minimal_size):
         old_arr=self.arr
         
-        self.size=new_size
-        self.arr=array.array(self.key_type, [0])*self.size
+        self.size=self.ini_array(new_minimal_size)
         
         for val in old_arr:
             self.add(val)
