@@ -1,10 +1,9 @@
 from timeit import default_timer as timer
 
-def add_elements(n, collection):
-    s=collection()
+
+def add_elements(s, n):
     for x in xrange(n):
         s.add(x)
-    return s
     
 def lookup_elements(s, n):
     su=0
@@ -23,8 +22,9 @@ def testing_script(name, collection, sizes=[10**4, 10**5, 10**6], N=2):
         start_time=timer()
         N=2
         for _ in xrange(N):
+            s=collection()
             start_time=timer()
-            s=add_elements(size, collection)
+            add_elements(s, size)
             end_add_time=timer()
             r=lookup_elements(s,size)
             end_lookup_time=timer()
