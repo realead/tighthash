@@ -77,12 +77,21 @@ class ThightHashSetTester(unittest.TestCase):
         s=Set(30)
         self.assertEquals(s.get_preallocated_size(), 30)
         
-    def test_dont_insert_zero(self):
+        
+    def test_dont_count_twice(self):
         s=Set(1)
         self.assertTrue(s.add(5))
         self.assertTrue(s.add(7))
         self.assertFalse(0 in s)
-        self.assertEquals(len(s), 2)       
+        self.assertEquals(len(s), 2)  
+        
+        
+    def test_dont_insert_zero(self):
+        s=Set(10)
+        for z in xrange(1,11):
+            self.assertTrue(s.add(z))           
+        self.assertFalse(0 in s)    
+        
         
     def test_realocate(self):
         s=Set(3)
