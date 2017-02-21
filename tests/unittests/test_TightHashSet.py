@@ -41,7 +41,14 @@ class TesterTemplate(unittest.TestCase):
         self.assertTrue(123 in s)
         self.assertTrue(985 in s)
         self.assertFalse(4 in s)
-        
+    
+    def template_contains_zero(self, test_class):
+        s=test_class(100)
+        li=[3,4,5,0]
+        for e in li: 
+           self.assertTrue(s.add(e))
+        for e in li: 
+           self.assertTrue(e in s)   
            
     def template_insert_twice(self, test_class):
         s=test_class()
@@ -111,7 +118,7 @@ class TesterTemplate(unittest.TestCase):
         for i in li:
             self.assertTrue(i in s)   
         self.assertTrue(s.get_preallocated_size()>3)  
-        
+       
         
     def template_realocate_with_zero(self, test_class):
         s=test_class(3)
