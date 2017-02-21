@@ -1,0 +1,3 @@
+[submodule "uttemplate"]
+	path = uttemplate
+	url = https://github.com/realead/uttemplate
