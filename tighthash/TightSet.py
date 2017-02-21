@@ -63,8 +63,8 @@ class TightHashSet:
                 val_hash=0
             else: val_hash+=1
         
-        self.__cnt+=1
         self.arr[val_hash]=val
+        self.__cnt+=1
         return True
 
     def __contains__(self, val):
