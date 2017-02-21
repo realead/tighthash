@@ -112,6 +112,17 @@ class TesterTemplate(unittest.TestCase):
             self.assertTrue(i in s)   
         self.assertTrue(s.get_preallocated_size()>3)  
         
+        
+    def template_realocate_with_zero(self, test_class):
+        s=test_class(3)
+        li=[4,6,77,8,0]
+        self.assertEquals(s.get_preallocated_size(), 3) 
+        for i in li:
+            self.assertTrue(s.add(i))
+        for i in li:
+            self.assertTrue(i in s)   
+        self.assertTrue(s.get_preallocated_size()>3)  
+        
 
     
                      
