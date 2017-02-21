@@ -49,8 +49,11 @@ cdef class TightHashSet:
     def add(self, unsigned long long int val):
         #the special case -> 0, in the array it means empty space
         if val==0:
-           self.contains_zero=1
-           return -(self.contains_zero-1)
+            if self.contains_zero==1:
+                return False
+            else:
+                self.contains_zero=1
+                return True
           
         #if there is not enough place -> reallocate   
         if(self.__cnt*self.min_factor>self.size): 
