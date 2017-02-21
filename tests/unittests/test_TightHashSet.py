@@ -51,9 +51,11 @@ class TesterTemplate(unittest.TestCase):
         
     def template_insert_negative(self, test_class):
         s=test_class()
-        self.assertTrue(s.add(-5))
-        self.assertTrue(s.add(-500000))
-        self.assertEquals(len(s), 2)
+        with self.assertRaises(OverflowError) as context:
+           s.add(-5)   
+        with self.assertRaises(OverflowError) as context:
+           s.add(-500000)
+        self.assertEquals(len(s), 0)
         
          
     def template_insert_zero(self, test_class):
@@ -102,7 +104,7 @@ class TesterTemplate(unittest.TestCase):
         
     def template_realocate(self, test_class):
         s=test_class(3)
-        li=[4,6,-6,8]
+        li=[4,6,77,8]
         self.assertEquals(s.get_preallocated_size(), 3) 
         for i in li:
             self.assertTrue(s.add(i))
