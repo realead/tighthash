@@ -13,16 +13,18 @@ def lookup_elements(s, n):
     return su  
   
 
-def testing_script(name, collection, sizes=[10**4, 10**5, 10**6], N=2):
+def testing_script(name, collection, sizes=[10**4, 10**5, 10**6, 10**7], N=2):
 
     print "\n######## testing", name,"##################" 
         
     #add
     for size in sizes:
-        start_time=timer()
-        N=2
         for _ in xrange(N):
-            s=collection()
+            try:
+              s=collection(sizes*2.0)
+            except:
+              s=collection()# for default set
+              
             start_time=timer()
             add_elements(s, size)
             end_add_time=timer()
