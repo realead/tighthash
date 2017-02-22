@@ -133,5 +133,12 @@ class TesterTemplate(unittest.TestCase):
         self.assertTrue(s.get_preallocated_size()<6) #not too many
         
 
+    def template_minimal_increase(self, test_class):
+        s=test_class(1,increase_factor=1.0)
+        li=[4,6,77,8,0]
+        for i in li:
+            self.assertTrue(s.add(i))
+        for i in li:
+            self.assertTrue(i in s)   
     
                      

@@ -11,7 +11,7 @@ class TightHashSet:
       self.__cnt=0
       self.min_factor=min_factor
       self.key_type='L'
-      self.increase_factor=increase_factor
+      self.increase_factor=max(1.2, increase_factor)
       self.size=self.ini_array(start_size)
       self.contains_zero=False
       self.mult=random.choice(_primes)
