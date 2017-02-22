@@ -35,11 +35,10 @@ class TightHashSet:
         
         self.size=self.ini_array(new_minimal_size)
         
-        remember_cnt=self.__cnt
+        self.__cnt=0
         for val in old_arr:
            if val:
               self.add(val)
-        self.__cnt=remember_cnt
             
     def add(self, val):
         #the special case -> 0, in the array it means empty space
