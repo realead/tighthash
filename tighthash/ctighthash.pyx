@@ -42,9 +42,10 @@ cdef class TightHashSet:
         
         self.size=self.ini_array(new_minimal_size)
         
+        self.__cnt=0
         for i in xrange(len(old_arr)):
-            if self.arr.data.as_ulongs[i]!=0:
-                    self.add(self.arr.data.as_ulongs[i])
+            if old_arr.data.as_ulongs[i]!=0:
+                    self.add(old_arr.data.as_ulongs[i])
             
     def add(self, unsigned long long int val):
         #the special case -> 0, in the array it means empty space
@@ -96,3 +97,7 @@ cdef class TightHashSet:
         
     def get_preallocated_size(self):
         return len(self.arr)
+  
+        
+        
+        
