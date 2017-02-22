@@ -141,4 +141,11 @@ class TesterTemplate(unittest.TestCase):
         for i in li:
             self.assertTrue(i in s)   
     
-                     
+
+    def template_minimal_min_factor(self, test_class):
+        s=test_class(1,min_factor=1.0)
+        li=[4,6,77,8,0]
+        for i in li:
+            self.assertTrue(s.add(i))
+        for i in li:
+            self.assertTrue(i in s)                        

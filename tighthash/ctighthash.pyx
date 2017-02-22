@@ -19,7 +19,7 @@ cdef class TightHashSet:
     
     def __init__(self, start_size=1001, min_factor=1.5, increase_factor=1.2):
       self.__cnt=0
-      self.min_factor=min_factor
+      self.min_factor=max(1.2, min_factor)
       self.increase_factor= max(1.2, increase_factor)
       self.size=self.ini_array(start_size)
       self.contains_zero=0

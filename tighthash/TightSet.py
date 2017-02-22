@@ -9,7 +9,7 @@ _primes=[419,421,431,463,467,557,563,569,673,677,683,691,701,709,719,727,733 ,73
 class TightHashSet:
     def __init__(self, start_size=10, min_factor=1.5, increase_factor=1.2):
       self.__cnt=0
-      self.min_factor=min_factor
+      self.min_factor=max(1.2, min_factor)
       self.key_type='L'
       self.increase_factor=max(1.2, increase_factor)
       self.size=self.ini_array(start_size)
@@ -88,3 +88,5 @@ class TightHashSet:
         
     def get_preallocated_size(self):
         return len(self.arr)
+        
+        
