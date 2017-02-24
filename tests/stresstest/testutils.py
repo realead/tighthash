@@ -1,5 +1,6 @@
 from timeit import default_timer as timer
 
+import sys
 
 def add_elements(s, n):
     for x in xrange(n):
@@ -13,7 +14,7 @@ def lookup_elements(s, n):
     return su  
   
 
-def testing_script(name, collection, sizes=[10**4, 10**5, 10**6, 10**7], N=2):
+def testing_script(name, collection, sizes=[10**4, 10**5, 10**6, 10**7], N=1):
 
     print "\n######## testing", name,"##################" 
         
@@ -21,7 +22,7 @@ def testing_script(name, collection, sizes=[10**4, 10**5, 10**6, 10**7], N=2):
     for size in sizes:
         for _ in xrange(N):
             try:
-              s=collection(sizes*2.0)
+              s=collection() #(sizes*2.0)
             except:
               s=collection()# for default set
               
@@ -34,6 +35,9 @@ def testing_script(name, collection, sizes=[10**4, 10**5, 10**6, 10**7], N=2):
         number="10**{0}".format(len(str(size))-1)        
         print number,":",(end_add_time-start_time)/(N*size),"sec per add"
         print number,":",(end_lookup_time-end_add_time)/(N*size),"sec per lookup"
+        print "Size:", sys.getsizeof(s)
+        print "len:", len(s)
+        print "reserved:", s.get_preallocated_size()
         
         
 

@@ -17,7 +17,7 @@ cdef class TightHashSet:
     cdef long long int _add
     cdef array.array arr
     
-    def __init__(self, start_size=1001, min_factor=1.5, increase_factor=1.2):
+    def __init__(self, start_size=1001, min_factor=1.2, increase_factor=1.2):
       self.__cnt=0
       self.min_factor=max(1.2, min_factor)
       self.increase_factor= max(1.2, increase_factor)
