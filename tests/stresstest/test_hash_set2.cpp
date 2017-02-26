@@ -4,5 +4,5 @@
 
 
 int main(){
-    return do_test<std::unordered_set<size_t> >(1.0);
+    return do_test<std::unordered_set<size_t> >(10.0);
 }

@@ -22,7 +22,7 @@ def testing_script(name, collection, sizes=[10**4, 10**5, 10**6, 10**7], N=1):
     for size in sizes:
         for _ in xrange(N):
             try:
-              s=collection() #(sizes*2.0)
+              s=collection(size) 
             except:
               s=collection()# for default set
               

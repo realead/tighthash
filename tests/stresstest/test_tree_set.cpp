@@ -4,5 +4,5 @@
 
 
 int main(){
-    return do_test<std::set<size_t> >();
+    return do_test<std::set<size_t> >(1.0);
 }
