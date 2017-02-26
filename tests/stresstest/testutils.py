@@ -37,7 +37,10 @@ def testing_script(name, collection, sizes=[10**4, 10**5, 10**6, 10**7], N=1):
         print number,":",(end_lookup_time-end_add_time)/(N*size),"sec per lookup"
         print "Size:", sys.getsizeof(s)
         print "len:", len(s)
-        print "reserved:", s.get_preallocated_size()
+        try:
+            print "reserved:", s.get_preallocated_size()
+        except:
+            pass
         
         
 
