@@ -90,8 +90,8 @@ class TesterTemplate(unittest.TestCase):
  
          
     def template_preallocated_size(self, test_class):
-        s=test_class(30)
-        self.assertEquals(s.get_preallocated_size(), 30)
+        s=test_class(30, min_factor=1.499)
+        self.assertEquals(s.get_preallocated_size(), 45)
         
         
     def template_dont_count_twice(self, test_class):
@@ -110,26 +110,26 @@ class TesterTemplate(unittest.TestCase):
         
         
     def template_realocate(self, test_class):
-        s=test_class(3)
+        s=test_class(1, min_factor=1.5)
         li=[4,6,77,8]
-        self.assertEquals(s.get_preallocated_size(), 3) 
+        self.assertEquals(s.get_preallocated_size(), 2) 
         for i in li:
             self.assertTrue(s.add(i))
         for i in li:
             self.assertTrue(i in s)   
-        self.assertTrue(s.get_preallocated_size()>3) 
+        self.assertTrue(s.get_preallocated_size()>2) 
         self.assertTrue(s.get_preallocated_size()<6) #not too many! 
        
         
     def template_realocate_with_zero(self, test_class):
-        s=test_class(3)
+        s=test_class(1, min_factor=1.5)
         li=[4,6,77,8,0]
-        self.assertEquals(s.get_preallocated_size(), 3) 
+        self.assertEquals(s.get_preallocated_size(),2) 
         for i in li:
             self.assertTrue(s.add(i))
         for i in li:
             self.assertTrue(i in s)   
-        self.assertTrue(s.get_preallocated_size()>3) 
+        self.assertTrue(s.get_preallocated_size()>2) 
         self.assertTrue(s.get_preallocated_size()<6) #not too many
         
 
@@ -148,4 +148,30 @@ class TesterTemplate(unittest.TestCase):
         for i in li:
             self.assertTrue(s.add(i))
         for i in li:
-            self.assertTrue(i in s)                        
+            self.assertTrue(i in s)  
+            
+            
+    def template_reserved_for(self, test_class):
+        N=1000
+        s=test_class(N, min_factor=2.0)
+        reserved_number=s.get_preallocated_size();
+        for x in xrange(1,N+1):
+          s.add(x)
+        self.assertEquals(s.get_preallocated_size(), reserved_number)#there was no need to rehash!     
+        
+            
+            
+    def template_reserved_for_right_min(self, test_class):
+        N=101
+        s=test_class(N, min_factor=1.0)
+        reserved_number=s.get_preallocated_size();
+        for x in xrange(1,N+1):
+          s.add(x)
+        self.assertEquals(s.get_preallocated_size(), reserved_number)#there was no need to rehash!     
+        
+        
+               
+        
+        
+        
+                      

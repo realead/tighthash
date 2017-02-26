@@ -7,12 +7,12 @@ import math
 _primes=[419,421,431,463,467,557,563,569,673,677,683,691,701,709,719,727,733 ,739,743,751,773,787,797,809,811,821,823,827,829,839,853,857,859,863,877,881,947,953,967,971,977,983,991,997,1009,1013]
 
 class TightHashSet:
-    def __init__(self, start_size=10, min_factor=1.5, increase_factor=1.2):
+    def __init__(self, capacity=1000, min_factor=1.2, increase_factor=1.2):
       self.__cnt=0
       self.min_factor=max(1.2, min_factor)
       self.key_type='L'
       self.increase_factor=max(1.2, increase_factor)
-      self.size=self.ini_array(start_size)
+      self.size=self.ini_array(int(math.ceil(min_factor*capacity)))
       self.contains_zero=False
       self.mult=random.choice(_primes)
       self._add=random.randint(100, 2000)

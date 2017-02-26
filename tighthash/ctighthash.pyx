@@ -17,11 +17,11 @@ cdef class TightHashSet:
     cdef long long int _add
     cdef array.array arr
     
-    def __init__(self, start_size=1001, min_factor=1.2, increase_factor=1.2):
+    def __init__(self,  capacity=1001, min_factor=1.2, increase_factor=1.2):
       self.__cnt=0
       self.min_factor=max(1.2, min_factor)
       self.increase_factor= max(1.2, increase_factor)
-      self.size=self.ini_array(start_size)
+      self.size=self.ini_array(int(math.ceil(capacity*self.min_factor)));
       self.contains_zero=0
       self.mult=random.choice(_primes)
       self._add=random.randint(100, 2000)
