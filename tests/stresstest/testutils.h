@@ -62,35 +62,33 @@ std::string header<tSet>(float load_factor){
 
 
 template <typename Set>
-size_t do_test(float load_factor){
+size_t do_test(size_t size, float load_factor){
+   size_t sum=0;
+   
+   std::cout<<"\n\n########## testisting "<<header<Set>(load_factor)<<":\n";
     
-    std::cout<<"\n\n########## testisting "<<header<Set>(load_factor)<<":\n";
-    std::size_t sizes[4]={10000, 100000, 1000000, 10000000};
-    
-    size_t sum=0;
-    for(auto size : sizes){
-       Set set;
-       reserve(set, size, load_factor);
+   Set set;
+   reserve(set, size, load_factor);
 
-       auto begin = std::chrono::high_resolution_clock::now();
-       for(size_t i=0;i<size;i++)
-         set.insert(55*i);
-       auto end = std::chrono::high_resolution_clock::now();
-       std::cout <<size<<": "<<std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/(size*1e9)<< " sec per add" << std::endl;
-        
-       begin = std::chrono::high_resolution_clock::now();
-        
-       for(size_t i=0;i<size;i++)
-        sum+=set.count(i);
-       end = std::chrono::high_resolution_clock::now();
-       std::cout <<size<<": "<<std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/(size*1e9)<< " sec per lookup" << std::endl;
-       
-       put_out_statistics(set);
+   auto begin = std::chrono::high_resolution_clock::now();
+   for(size_t i=0;i<size;i++)
+     set.insert(55*i);
+   auto end = std::chrono::high_resolution_clock::now();
+   std::cout <<size<<": "<<std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/(size*1e9)<< " sec per add" << std::endl;
+    
+   begin = std::chrono::high_resolution_clock::now();
+    
+   for(size_t i=0;i<size;i++)
+       sum+=set.count(i);
+    
+   end = std::chrono::high_resolution_clock::now();
+   std::cout <<size<<": "<<std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/(size*1e9)<< " sec per lookup" << std::endl;
+   
+   put_out_statistics(set);
       
-    }
+
+   std::cout<<"\n########## testisting  done for "<<header<Set>(load_factor)<<":\n\n";
     
-    std::cout<<"\n########## testisting  done for "<<header<Set>(load_factor)<<":\n\n";
-    
-    return sum;
+   return sum-set.size();
 
 }
