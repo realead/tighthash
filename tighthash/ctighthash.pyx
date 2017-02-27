@@ -7,6 +7,33 @@ import math
 _primes=[419,421,431,463,467,557,563,569,673,677,683,691,701,709,719,727,733 ,739,743,751,773,787,797,809,811,821,823,827,829,839,853,857,859,863,877,881,947,953,967,971,977,983,991,997,1009,1013]
 
 
+cdef class THSetIterator:
+    cdef int __contains_zero
+    cdef array.array __arr
+    cdef unsigned long long int __it
+    cdef unsigned long long int __size
+    
+    def __init__(self, contains_zero, arr):
+        self.__contains_zero=contains_zero
+        self.__arr=arr
+        self.__size=len(arr)
+        self.__it=0
+        
+        
+    def __next__(self):
+        if self.__it==0:
+           self.__it+=1
+           if self.__contains_zero==1: 
+              return 0
+              
+        while True:
+            if self.__it>self.__size:
+                raise StopIteration
+            self.__it+=1
+            if self.__arr.data.as_ulongs[self.__it-2]!=0:          
+                return self.__arr.data.as_ulongs[self.__it-2]
+        
+
 cdef class TightHashSet:
     cdef unsigned long long int __cnt
     cdef double min_factor
@@ -16,6 +43,7 @@ cdef class TightHashSet:
     cdef long long int mult
     cdef long long int _add
     cdef array.array arr
+    
     
     def __init__(self,  capacity=1001, min_factor=1.2, increase_factor=1.2):
       self.__cnt=0
@@ -121,6 +149,11 @@ cdef class TightHashSet:
            self.arr.data.as_ulongs[pos]=0
            self.add(val)
            pos=self.__move_pos(pos)
+           
+           
+    def __iter__(self):
+        return THSetIterator(self.contains_zero, self.arr)
+        
   
         
         

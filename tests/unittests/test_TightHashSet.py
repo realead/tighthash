@@ -226,4 +226,35 @@ class TesterTemplate(unittest.TestCase):
             self.assertTrue(x in s)                   
         
         
-                      
+    def template_iterate_with_zero(self, test_class):
+        s=test_class(10)
+        for x in xrange(50):
+          s.add(x)
+          self.assertTrue(x in s)
+        self.assertEquals(len(s), 50)
+        
+        test_list=[]
+        for x in s:
+            test_list.append(x)
+            
+        self.assertEquals(len(test_list), 50)
+        for x in xrange(50):
+          self.assertTrue(x in test_list)
+          
+          
+          
+    def template_iterate_without_zero(self, test_class):
+        s=test_class(10)
+        for x in xrange(1,51):
+          s.add(x)
+          self.assertTrue(x in s)
+        self.assertEquals(len(s), 50)
+        
+        test_list=[]
+        for x in s:
+            test_list.append(x)
+            
+        self.assertEquals(len(test_list), 50)
+        for x in xrange(1,51):
+          self.assertTrue(x in test_list)         
+                             
