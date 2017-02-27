@@ -72,7 +72,7 @@ size_t do_test(size_t size, float load_factor){
 
    auto begin = std::chrono::high_resolution_clock::now();
    for(size_t i=0;i<size;i++)
-     set.insert(55*i);
+     set.insert(i);
    auto end = std::chrono::high_resolution_clock::now();
    std::cout <<size<<": "<<std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/(size*1e9)<< " sec per add" << std::endl;
     
@@ -84,11 +84,26 @@ size_t do_test(size_t size, float load_factor){
    end = std::chrono::high_resolution_clock::now();
    std::cout <<size<<": "<<std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/(size*1e9)<< " sec per lookup" << std::endl;
    
+   sum-=set.size();
    put_out_statistics(set);
-      
+   
+   begin = std::chrono::high_resolution_clock::now();
+   for(size_t i=size;i<size*2;i++)
+      set.erase(i);
+   end = std::chrono::high_resolution_clock::now();
+   std::cout <<size<<": "<<std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/(size*1e9)<< " sec per discarding nonexisting " << std::endl;
+     
 
+   
+   begin = std::chrono::high_resolution_clock::now();
+   for(size_t i=0;i<size;i++)
+      set.erase(i);
+   end = std::chrono::high_resolution_clock::now();
+   std::cout <<size<<": "<<std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/(size*1e9)<< " sec per discarding existing " << std::endl;
+   
+   
    std::cout<<"\n########## testisting  done for "<<header<Set>(load_factor)<<":\n\n";
     
-   return sum-set.size();
+   return sum+set.size();
 
 }
