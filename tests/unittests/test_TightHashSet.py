@@ -170,8 +170,60 @@ class TesterTemplate(unittest.TestCase):
         self.assertEquals(s.get_preallocated_size(), reserved_number)#there was no need to rehash!     
         
         
-               
+    def template_discard(self, test_class):
+        s=test_class(10)
+        for x in xrange(1,11):
+          s.add(x)
+          self.assertTrue(x in s)
+        s.add(0)
         
+        for x in xrange(1,11):
+          s.discard(x)
+          self.assertFalse(x in s)
+        
+        self.assertTrue(0 in s)
+        self.assertEquals(len(s), 1)
+               
+             
+    def template_discard_zero(self, test_class):
+        s=test_class(10)
+        s.add(0)
+        self.assertTrue(0 in s)
+        s.discard(0)
+        self.assertFalse(0 in s)
+        self.assertEquals(len(s), 0)
+        
+                
+    def template_discard_all(self, test_class):
+        s=test_class(10)
+        for x in xrange(50):
+          s.add(x)
+          self.assertTrue(x in s)
+        self.assertEquals(len(s), 50)
+        
+        for x in reversed(xrange(25)):
+          s.discard(x)
+          self.assertFalse(x in s)
+        
+        self.assertEquals(len(s), 25)
+        for x in xrange(25,50):
+            self.assertTrue(x in s)
+           
+        
+    def template_discard_nonexisting(self, test_class):
+        s=test_class(10)
+        for x in xrange(50):
+          s.add(x)
+          self.assertTrue(x in s)
+        self.assertEquals(len(s), 50)
+        
+        for x in reversed(xrange(50,75)):
+          s.discard(x)
+          self.assertFalse(x in s)
+        
+        self.assertEquals(len(s), 50)
+        for x in xrange(50):
+            self.assertTrue(x in s)                   
         
         
                       

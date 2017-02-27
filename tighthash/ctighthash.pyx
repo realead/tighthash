@@ -25,8 +25,14 @@ cdef class TightHashSet:
       self.contains_zero=0
       self.mult=random.choice(_primes)
       self._add=random.randint(100, 2000)
+    
+    cdef __move_pos(self, unsigned long long int pos):
+        return 0 if pos==self.size-1 else pos+1
       
-      
+    cdef __find(self, unsigned long long int start, unsigned long long int item):
+        while self.arr.data.as_ulongs[start] and self.arr.data.as_ulongs[start]!=item:
+            start=self.__move_pos(start)
+        return start 
       
     cdef ini_array(self, long long int minimal_size):
         self.arr=array.array('L', [0])
@@ -97,6 +103,30 @@ cdef class TightHashSet:
         
     def get_preallocated_size(self):
         return len(self.arr)
+        
+        
+    def discard(self, unsigned long long int val):
+       if val==0:
+             if self.contains_zero==1:
+                self.contains_zero=0
+             return
+       cdef unsigned long long int val_hash=self.get_hash(val)  
+       cdef unsigned long long int pos=self.__find(val_hash, val)
+       if not self.arr.data.as_ulongs[pos]:
+            return #not in the set!
+            
+       self.arr.data.as_ulongs[pos]=0 #delete
+       self.__cnt-=1
+        
+       #reorder the next values
+       #we a sure everything is OK only after meeting a 0
+       pos =self.__move_pos(pos)
+       while self.arr.data.as_ulongs[pos]:
+           val=self.arr.data.as_ulongs[pos]
+           self.__cnt-=1
+           self.arr.data.as_ulongs[pos]=0
+           self.add(val)
+           pos=self.__move_pos(pos)
   
         
         

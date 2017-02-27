@@ -39,7 +39,16 @@ class TightHashSet:
         for val in old_arr:
            if val:
               self.add(val)
-            
+    
+    
+    def __move_pos(self, pos):
+        return 0 if pos==self.size-1 else pos+1
+        
+    def __find(self, start, item):
+        while self.arr[start] and self.arr[start]!=item:
+            start=self.__move_pos(start)
+        return start
+         
     def add(self, val):
         #the special case -> 0, in the array it means empty space
         if not val:
@@ -88,5 +97,28 @@ class TightHashSet:
         
     def get_preallocated_size(self):
         return len(self.arr)
+        
+    def discard(self, val):
+       if val==0:
+             if self.contains_zero:
+                self.contains_zero=False
+             return
+       val_hash=self.get_hash(val)  
+       pos=self.__find(val_hash, val)
+       if not self.arr[pos]:
+            return #not in the set!
+            
+       self.arr[pos]=0 #delete
+       self.__cnt-=1
+        
+       #reorder the next values
+       #we a sure everything is OK only after meeting a 0
+       pos =self.__move_pos(pos)
+       while self.arr[pos]:
+           val=self.arr[pos]
+           self.__cnt-=1
+           self.arr[pos]=0
+           self.add(val)
+           pos=self.__move_pos(pos)
         
         
