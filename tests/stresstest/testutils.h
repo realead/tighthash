@@ -78,6 +78,15 @@ size_t do_test(size_t size, float load_factor){
    std::cout <<size<<": "<<std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/(size*1e9)<< " sec per add" << std::endl;
    
    
+   //iterating through
+   begin = std::chrono::high_resolution_clock::now();
+    
+   for(typename Set::const_iterator it=set.begin(); it!=set.end(); ++it)
+       sum+=*it;
+    
+   end = std::chrono::high_resolution_clock::now();
+   std::cout <<size<<": "<<std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count()/(size*1e9)<< " sec per iterating through" << std::endl;
+   
    //nonexisting look_up
    begin = std::chrono::high_resolution_clock::now();
     

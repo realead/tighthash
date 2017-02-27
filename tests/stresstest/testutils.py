@@ -18,7 +18,13 @@ def lookup_elements(s, n):
     for x in xrange(n):
         if x in s:
           su+=1
-    return su  
+    return su 
+    
+def iterate_through(s):
+    su=0
+    for x in s:
+        su+=x
+    return su   
 
 def delete_nonexisting(s,n):
     for x in xrange(n,2*n):
@@ -47,9 +53,14 @@ def testing_script(name, collection):
     end_add_time=timer()
     print number,":",(end_add_time-start_time)/(size),"sec per add"
     
+    
+    r=iterate_through(s)
+    end_iterate_time=timer()
+    print number,":",(end_iterate_time-end_add_time)/(size),"sec per iterating through"
+    
     r=lookup_nonexisting(s,size)
     end_nonexisting_time=timer()
-    print number,":",(end_nonexisting_time-end_add_time)/(size),"sec per lookup nonexisting"
+    print number,":",(end_nonexisting_time-end_iterate_time)/(size),"sec per lookup nonexisting"
     
     r=lookup_elements(s,size)
     end_lookup_time=timer()
