@@ -69,17 +69,14 @@ cdef class TightHashSet:
         
         #all values except 0:
         cdef unsigned long long int val_hash=self.get_hash(val)
-            
-        while self.arr.data.as_ulongs[val_hash]:
-            if val==self.arr.data.as_ulongs[val_hash]:
-                return False #already in the set
-            if val_hash==self.size-1:
-                val_hash=0
-            else: val_hash+=1
+        val_hash=self.__find(val_hash, val)
+        if self.arr.data.as_ulongs[val_hash]:
+            return False #already in the set
         
-        self.__cnt+=1
         self.arr.data.as_ulongs[val_hash]=val
+        self.__cnt+=1
         return True
+        
 
     def __contains__(self, unsigned long long int val):
         #the special case -> 0, in the array it means empty space
@@ -88,15 +85,12 @@ cdef class TightHashSet:
         
         #all values except 0:    
         cdef unsigned long long int val_hash=self.get_hash(val)
-            
-        while self.arr.data.as_ulongs[val_hash]:
-            if self.arr.data.as_ulongs[val_hash]==val:
-                return True
-            if val_hash==self.size-1:
-                val_hash=0
-            else: val_hash+=1
+        val_hash=self.__find(val_hash, val)   
         
+        if self.arr.data.as_ulongs[val_hash]==val:
+            return True
         return False
+        
         
     def __len__(self):     
         return self.__cnt+self.contains_zero

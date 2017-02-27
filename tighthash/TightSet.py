@@ -63,15 +63,12 @@ class TightHashSet:
         
         #all values except 0:
         val_hash=self.get_hash(val)
-            
-        while self.arr[val_hash]:
-            if val==self.arr[val_hash]:
-                return False #already in the set
-            if val_hash==self.size-1:
-                val_hash=0
-            else: val_hash+=1
         
-        self.arr[val_hash]=val
+        pos=self.__find(val_hash, val)
+        if self.arr[pos]: 
+            return False #already in the set
+                
+        self.arr[pos]=val
         self.__cnt+=1
         return True
 
@@ -82,15 +79,11 @@ class TightHashSet:
         
         #all values except 0:    
         val_hash=self.get_hash(val)
-            
-        while self.arr[val_hash]:
-            if self.arr[val_hash]==val:
-                return True
-            if val_hash==self.size-1:
-                val_hash=0
-            else: val_hash+=1
         
-        return False
+        pos=self.__find(val_hash, val)
+        if self.arr[pos]:
+            return True
+        return False   
         
     def __len__(self):     
         return self.__cnt+self.contains_zero
@@ -112,7 +105,7 @@ class TightHashSet:
        self.__cnt-=1
         
        #reorder the next values
-       #we a sure everything is OK only after meeting a 0
+       #we are sure everything is OK only after meeting a 0
        pos =self.__move_pos(pos)
        while self.arr[pos]:
            val=self.arr[pos]
