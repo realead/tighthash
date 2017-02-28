@@ -147,5 +147,37 @@ class TightHashSet(TightHashBase):
         
     
     
+class TightHashMap(TightHashBase):    
+
+    def __init__(self, capacity=1000, min_factor=1.2, increase_factor=1.2):
+        TightHashBase.__init__(self, capacity, min_factor, increase_factor)  
+        self.zero_val=0
+        self.vals=array.array(self.key_type, self.arr) 
         
+    def realocate(self, new_minimal_size):
+        pass
+        
+    def __setitem__(self, key, val):
+        #the special case -> 0, in the array it means empty space
+        if not key:
+           self.contains_zero=True
+           self.zero_val=val
+           return 
+          
+        #if there is not enough place -> reallocate   
+        if(self.cnt*self.min_factor>self.size): 
+           self.realocate(int(math.ceil(self.size*self.increase_factor)))
+            
+        
+        #all values except 0:
+        val_hash=self.get_hash(key)
+        
+        pos=self.find(val_hash, key)
+        cnt_change=0 if self.arr[pos] else 1
+        if  not self.arr[pos]:
+           cnt_change=1
+           self.arr[pos]=key
+                
+        self.vals[pos]=val
+        self.cnt+=cnt_change
         
