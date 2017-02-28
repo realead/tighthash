@@ -34,6 +34,12 @@ def delete_elements(s, n):
     for x in xrange(n):
         s.discard(x)
         
+def stoptime(fun, n, label):
+    start_time=timer()
+    fun()
+    end_time=timer()
+    print n,":",(end_time-start_time)/n,"sec per", label
+        
 
 def testing_script(name, collection):
   
@@ -47,43 +53,14 @@ def testing_script(name, collection):
     except:
       s=collection()# for default set
      
-    number="{0}".format(size)  
-    start_time=timer()
-    add_elements(s, size)
-    end_add_time=timer()
-    print number,":",(end_add_time-start_time)/(size),"sec per add"
-    
-    
-    r=iterate_through(s)
-    end_iterate_time=timer()
-    print number,":",(end_iterate_time-end_add_time)/(size),"sec per iterating through"
-    
-    r=lookup_nonexisting(s,size)
-    end_nonexisting_time=timer()
-    print number,":",(end_nonexisting_time-end_iterate_time)/(size),"sec per lookup nonexisting"
-    
-    r=lookup_elements(s,size)
-    end_lookup_time=timer()
-    print number,":",(end_lookup_time-end_nonexisting_time)/(size),"sec per lookup existing"
-    print "Size:", sys.getsizeof(s)
-    print "len:", len(s)
-    try:
-        print "reserved:", s.get_preallocated_size()
-    except:
-        pass
-        
-    delete_nonexisting(s, size)
-    end_nonexisting_time=timer()
-    print number,":",(end_nonexisting_time-end_lookup_time)/(size),"sec per discarding nonexisting"
-    
-    delete_elements(s, size)
-    end_delete_time=timer()
-    print number,":",(end_delete_time-end_nonexisting_time)/(size),"sec per discarding existing"
-          
-            
-    
 
-        
-       
+    stoptime(lambda s=s, size=size : add_elements(s,size), size, "add")
+    stoptime(lambda s=s : iterate_through(s), size, "iterating through")
+    stoptime(lambda s=s, size=size : lookup_nonexisting(s,size), size, "lookup nonexisting")
+    stoptime(lambda s=s, size=size : lookup_elements(s,size), size, "lookup existing")
+    stoptime(lambda s=s, size=size : delete_nonexisting(s,size), size, "discard nonexisting")
+    stoptime(lambda s=s, size=size : delete_elements(s,size), size, "discard existing")
+    
+    
     print "\n######## done testing", name,"##################\n"  
      
