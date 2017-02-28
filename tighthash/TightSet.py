@@ -27,18 +27,17 @@ class THSetIterator:
                 return self.__arr[self.__it-2]
 
 
-class TightHashSet:
+class TightHashBase:
     def __init__(self, capacity=1000, min_factor=1.2, increase_factor=1.2):
-      self.__cnt=0
-      self.min_factor=max(1.2, min_factor)
-      self.key_type='L'
-      self.increase_factor=max(1.2, increase_factor)
-      self.size=self.ini_array(int(math.ceil(min_factor*capacity)))
-      self.contains_zero=False
-      self.mult=random.choice(_primes)
-      self._add=random.randint(100, 2000)
-      
-      
+        self.cnt=0
+        self.min_factor=max(1.2, min_factor)
+        self.key_type='L'
+        self.increase_factor=max(1.2, increase_factor)
+        self.size=self.ini_array(int(math.ceil(min_factor*capacity)))
+        self.contains_zero=False
+        self.mult=random.choice(_primes)
+        self.add_val=random.randint(100, 2000)
+        
     def ini_array(self, minimal_size):
         if minimal_size<100:
             self.arr=array.array(self.key_type, [0])*minimal_size
@@ -47,28 +46,53 @@ class TightHashSet:
             repeat=(minimal_size+99)//100
             self.arr=(array.array(self.key_type,[0])*100)*repeat
             return repeat*100
-            
+
     def get_hash(self, val):
-        return (self.mult*hash(val)+self._add)%self.size
-      
-    def __realocate(self, new_minimal_size):
+        return (self.mult*hash(val)+self.add_val)%self.size
+        
+    def move_pos(self, pos):
+        return 0 if pos==self.size-1 else pos+1
+        
+    def find(self, start, item):
+        while self.arr[start] and self.arr[start]!=item:
+            start=self.move_pos(start)
+        return start
+        
+    def __len__(self):     
+        return self.cnt+self.contains_zero
+        
+    def get_preallocated_size(self):
+        return len(self.arr)
+        
+    def __contains__(self, val):
+        #the special case -> 0, in the array it means empty space
+        if not val:
+            return self.contains_zero
+        
+        #all values except 0:    
+        val_hash=self.get_hash(val)
+        
+        pos=self.find(val_hash, val)
+        if self.arr[pos]:
+            return True
+        return False
+        
+        
+class TightHashSet(TightHashBase):    
+
+    def __init__(self, capacity=1000, min_factor=1.2, increase_factor=1.2):
+        TightHashBase.__init__(self, capacity, min_factor, increase_factor)
+        
+        
+    def realocate(self, new_minimal_size):
         old_arr=self.arr
         
         self.size=self.ini_array(new_minimal_size)
         
-        self.__cnt=0
+        self.cnt=0
         for val in old_arr:
            if val:
               self.add(val)
-    
-    
-    def __move_pos(self, pos):
-        return 0 if pos==self.size-1 else pos+1
-        
-    def __find(self, start, item):
-        while self.arr[start] and self.arr[start]!=item:
-            start=self.__move_pos(start)
-        return start
          
     def add(self, val):
         #the special case -> 0, in the array it means empty space
@@ -78,39 +102,21 @@ class TightHashSet:
            return result
           
         #if there is not enough place -> reallocate   
-        if(self.__cnt*self.min_factor>self.size): 
-           self.__realocate(int(math.ceil(self.size*self.increase_factor)))
+        if(self.cnt*self.min_factor>self.size): 
+           self.realocate(int(math.ceil(self.size*self.increase_factor)))
             
         
         #all values except 0:
         val_hash=self.get_hash(val)
         
-        pos=self.__find(val_hash, val)
+        pos=self.find(val_hash, val)
         if self.arr[pos]: 
             return False #already in the set
                 
         self.arr[pos]=val
-        self.__cnt+=1
+        self.cnt+=1
         return True
 
-    def __contains__(self, val):
-        #the special case -> 0, in the array it means empty space
-        if not val:
-            return self.contains_zero
-        
-        #all values except 0:    
-        val_hash=self.get_hash(val)
-        
-        pos=self.__find(val_hash, val)
-        if self.arr[pos]:
-            return True
-        return False   
-        
-    def __len__(self):     
-        return self.__cnt+self.contains_zero
-        
-    def get_preallocated_size(self):
-        return len(self.arr)
         
     def discard(self, val):
        if val==0:
@@ -118,22 +124,22 @@ class TightHashSet:
                 self.contains_zero=False
              return
        val_hash=self.get_hash(val)  
-       pos=self.__find(val_hash, val)
+       pos=self.find(val_hash, val)
        if not self.arr[pos]:
             return #not in the set!
             
        self.arr[pos]=0 #delete
-       self.__cnt-=1
+       self.cnt-=1
         
        #reorder the next values
        #we are sure everything is OK only after meeting a 0
-       pos =self.__move_pos(pos)
+       pos =self.move_pos(pos)
        while self.arr[pos]:
            val=self.arr[pos]
-           self.__cnt-=1
+           self.cnt-=1
            self.arr[pos]=0
            self.add(val)
-           pos=self.__move_pos(pos)
+           pos=self.move_pos(pos)
            
            
     def __iter__(self):
