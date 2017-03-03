@@ -27,25 +27,26 @@ class THSetIterator:
                 return self.__arr[self.__it-2]
 
 
+def needed_size(min_factor, capacity):
+    return int(math.ceil(min_factor*capacity))
+    
 class TightHashBase:
     def __init__(self, capacity=1000, min_factor=1.2, increase_factor=1.2):
         self.cnt=0
         self.min_factor=max(1.2, min_factor)
         self.key_type='L'
         self.increase_factor=max(1.2, increase_factor)
-        self.size=self.ini_array(int(math.ceil(min_factor*capacity)))
+        self.size, self.arr=self.ini_array(needed_size(min_factor, capacity))
         self.contains_zero=False
         self.mult=random.choice(_primes)
         self.add_val=random.randint(100, 2000)
         
     def ini_array(self, minimal_size):
         if minimal_size<100:
-            self.arr=array.array(self.key_type, [0])*minimal_size
-            return minimal_size
+            return minimal_size, array.array(self.key_type, [0])*minimal_size
         else:
             repeat=(minimal_size+99)//100
-            self.arr=(array.array(self.key_type,[0])*100)*repeat
-            return repeat*100
+            return repeat*100, (array.array(self.key_type,[0])*100)*repeat
 
     def get_hash(self, val):
         return (self.mult*hash(val)+self.add_val)%self.size
@@ -87,7 +88,7 @@ class TightHashSet(TightHashBase):
     def realocate(self, new_minimal_size):
         old_arr=self.arr
         
-        self.size=self.ini_array(new_minimal_size)
+        self.size, self.arr=self.ini_array(new_minimal_size)
         
         self.cnt=0
         for val in old_arr:
@@ -152,7 +153,7 @@ class TightHashMap(TightHashBase):
     def __init__(self, capacity=1000, min_factor=1.2, increase_factor=1.2):
         TightHashBase.__init__(self, capacity, min_factor, increase_factor)  
         self.zero_val=0
-        self.vals=array.array(self.key_type, self.arr) 
+        _, self.vals=self.ini_array(needed_size(min_factor, capacity))
         
     def realocate(self, new_minimal_size):
         pass
