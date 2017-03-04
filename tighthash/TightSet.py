@@ -156,7 +156,17 @@ class TightHashMap(TightHashBase):
         _, self.vals=self.ini_array(needed_size(min_factor, capacity))
         
     def realocate(self, new_minimal_size):
-        pass
+        old_keys=self.arr
+        old_vals=self.vals
+        
+        self.size, self.arr=self.ini_array(new_minimal_size)
+        _, self.vals=self.ini_array(new_minimal_size)
+        
+        
+        self.cnt=0
+        for i,key in enumerate(old_keys):
+           if key:
+              self[key]=old_vals[i]
         
     def __setitem__(self, key, val):
         #the special case -> 0, in the array it means empty space
