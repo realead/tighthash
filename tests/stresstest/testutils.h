@@ -2,6 +2,8 @@
 #include <iostream>
 #include <unordered_set>
 #include <set>
+#include <unordered_map>
+#include <map>
 #include <string>
 #include <sstream>
 #include <functional>
@@ -129,3 +131,96 @@ size_t do_test(size_t size, float load_factor){
    return set.size();
 
 }
+
+
+
+
+///Tests for maps:
+typedef std::unordered_map<size_t, size_t> uMap;
+
+template<>
+void reserve(uMap &s, std::size_t cnt, float load_factor){
+    s.max_load_factor(load_factor);
+    s.reserve(cnt);
+}
+
+template<>
+std::string header<uMap>(float load_factor){
+
+   std::stringstream ss;
+   ss<<"c++ unordered_map ( max_load_factor="<<load_factor<<")";
+   return ss.str();
+}
+
+
+typedef std::map<size_t, size_t> tMap;
+template<>
+std::string header<tMap>(float load_factor){
+   return "c++ std::map";
+}
+
+
+template <typename Map>
+size_t do_test_map(size_t size, float load_factor){
+   size_t sum=0;
+   
+   std::cout<<"\n\n########## testisting "<<header<Map>(load_factor)<<":\n";
+    
+   Map map;
+   reserve(map, size, load_factor);
+
+
+   //insert
+   operation_test([&map, size](){
+      for(size_t i=0;i<size;i++)
+        map.insert(std::make_pair(i, i+44));
+   }, size, "add");
+   
+   
+   //iterating through
+   operation_test([&map, &sum, size](){
+      for(typename Map::const_iterator it=map.begin(); it!=map.end(); ++it)
+       sum+=it->second;
+   }, size, "iterating through");
+
+   
+   //nonexisting look_up
+   operation_test([&map, &sum, size](){
+      for(size_t i=size;i<size*2;i++)
+       sum+=map.count(i);
+   }, size, "nonexisting lookup");
+
+   
+   //existing look_up
+   operation_test([&map, &sum, size](){
+      for(size_t i=0;i<size;i++)
+       sum+=map.count(i);
+   }, size, "existing lookup");
+   
+   sum-=map.size();
+   //put_out_statistics(set);
+   
+   //nonexisting delete:
+   operation_test([&map, size](){
+      for(size_t i=size;i<size*2;i++)
+      try{
+        map.erase(i);
+      }
+      catch(...){;}
+   }, size, "discarding nonexisting");
+
+     
+   //delete existing
+   operation_test([&map, size](){
+      for(size_t i=0;i<size;i++)
+        map.erase(i);
+   }, size, "discarding existing");
+   
+   
+   std::cout<<"\n########## testisting  done for "<<header<Map>(load_factor)<<":\n\n";
+    
+   return map.size();
+
+}
+
+
