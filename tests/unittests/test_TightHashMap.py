@@ -121,6 +121,48 @@ class MapTester(unittest.TestCase):
             
         self.assertEquals(len(test_list), 50)
         for x in xrange(1,51):
-          self.assertTrue( (x, x+44) in test_list)         
+          self.assertTrue( (x, x+44) in test_list) 
+          
+          
+    def test_delitem(self, test_class=PMap):
+        s=test_class(10)
+        for x in xrange(1,11):
+          s[x]=x+44
+          self.assertTrue(x in s)
+        s[0]=33
+        
+        for x in xrange(1,11):
+           del s[x]
+           self.assertFalse(x in s)
+        
+        self.assertTrue(0 in s)
+        self.assertEquals(len(s), 1)
+               
+             
+    def test_delitem_zero(self, test_class=PMap):
+        s=test_class(10)
+        s[0]=0
+        self.assertTrue(0 in s)
+        del s[0]
+        self.assertFalse(0 in s)
+        self.assertEquals(len(s), 0)        
             
-                                              
+    def test_delitem_zero_throws(self, test_class=PMap):
+        s=test_class(4)
+        with self.assertRaises(KeyError) as context:
+             del s[0]
+        self.assertEquals(0, context.exception.args[0])     
+        
+    def test_delitem_throws(self, test_class=PMap):
+        s=test_class(4)
+        for x in xrange(1,11):
+          s[x]=x+44
+          self.assertTrue(x in s)
+        s[0]=33
+        
+        for x in xrange(22,33):
+            with self.assertRaises(KeyError) as context:
+                del s[x]
+            self.assertEquals(x, context.exception.args[0])   
+        
+                                                

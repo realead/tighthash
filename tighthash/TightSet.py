@@ -209,6 +209,30 @@ class TightHashMap(TightHashBase):
         return self.vals[pos]
         
         
-                
+    def __delitem__(self, key):
+        if key==0:
+             if self.contains_zero:
+                self.contains_zero=False
+                return
+             else:
+                raise KeyError(0) 
+                             
+        val_hash=self.get_hash(key)  
+        pos=self.find(val_hash, key)
+        if not self.arr[pos]:
+            raise KeyError(key)  #not here!
+            
+        self.arr[pos]=0 #delete
+        self.cnt-=1
         
+        #reorder the next values
+        #we are sure everything is OK only after meeting a 0
+        pos=self.move_pos(pos)
+        while self.arr[pos]:
+           key=self.arr[pos]
+           val=self.vals[pos]
+           self.cnt-=1
+           self.arr[pos]=0
+           self[key]=val
+           pos=self.move_pos(pos)
         
