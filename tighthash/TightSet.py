@@ -192,3 +192,22 @@ class TightHashMap(TightHashBase):
         self.vals[pos]=val
         self.cnt+=cnt_change
         
+        
+    def __getitem__(self, key):
+        if not key:
+           if self.contains_zero:
+                return self.zero_val
+           else:
+                raise KeyError(key)
+                        
+        #all values except 0:
+        val_hash=self.get_hash(key)      
+        pos=self.find(val_hash, key)
+        if not self.arr[pos]:
+            raise KeyError(key)
+        return self.vals[pos]
+        
+        
+                
+        
+        

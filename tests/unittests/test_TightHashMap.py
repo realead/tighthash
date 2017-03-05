@@ -54,7 +54,39 @@ class MapTester(unittest.TestCase):
             s[x]=x       
         self.assertEquals(len(s), 10)
         for x in xrange(10):
-            self.assertTrue(x in s)    
+            self.assertTrue(x in s)  
             
             
-                                     
+    def test_get_item_zero(self,test_class=PMap):
+        s=test_class(4)
+        s[0]=100 
+        self.assertEquals(s[0], 100)
+        s[0]=200
+        self.assertEquals(s[0], 200)   
+            
+            
+    def test_get_item_zero_throws(self,test_class=PMap):
+        s=test_class(4)
+        with self.assertRaises(KeyError) as context:
+           x=s[0]
+        
+        self.assertEquals(0, context.exception.args[0])  
+           
+    def test_get_item_nonzero(self,test_class=PMap):
+        s=test_class(4)
+        for x in xrange(1,10):
+           s[x]=x+22
+        self.assertEquals(len(s), 9)
+        for x in xrange(1,10):
+           self.assertEquals(s[x], x+22)
+           
+    def test_get_item_nonzero_throws(self,test_class=PMap):
+        s=test_class(4)
+        for x in xrange(1,10):
+            s[x]=x+22
+        self.assertEquals(len(s), 9)
+        for x in xrange(22,40):
+            with self.assertRaises(KeyError) as context:
+                a=s[x]
+            self.assertEquals(x, context.exception.args[0])      
+                                              
