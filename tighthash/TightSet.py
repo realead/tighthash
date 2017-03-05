@@ -78,6 +78,9 @@ class TightHashBase:
             return True
         return False
         
+    def __iter__(self):
+        return THSetIterator(self.contains_zero, self.arr)
+        
         
 class TightHashSet(TightHashBase):    
 
@@ -143,8 +146,6 @@ class TightHashSet(TightHashBase):
            pos=self.move_pos(pos)
            
            
-    def __iter__(self):
-        return THSetIterator(self.contains_zero, self.arr)
         
     
     
