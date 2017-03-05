@@ -63,4 +63,70 @@ def testing_script(name, collection):
     
     
     print "\n######## done testing", name,"##################\n"  
+    
+    
+    
+    
+    
+    
+def add_elements_map(s, n):
+    for x in xrange(n):
+        s[x]=x
+ 
+def lookup_nonexisting_map(s, n):
+    su=0
+    for x in xrange(n,2*n):
+        try:
+          su+=x[x]
+        except:
+            pass
+    return su   
+    
+def lookup_elements_map(s, n):
+    su=0
+    for x in xrange(n):
+        su+=s[x]
+    return su 
+    
+def iterate_through_map(s):
+    su=0
+    for x in s:
+        su+=x
+    return su   
+
+def delete_nonexisting_map(s,n):
+    for x in xrange(n,2*n):
+       try:
+          del s[x]
+       except:
+          pass
+
+def delete_elements_map(s, n):
+    for x in xrange(n):
+        del s[x]
+        
+            
+    
+def testing_map(name, collection):
+  
+    size=int(sys.argv[1])
+
+    print "\n######## testing", name,"##################" 
+        
+    #add
+    try:
+      s=collection(size) 
+    except:
+      s=collection()# for default map
+     
+
+    stoptime(lambda s=s, size=size : add_elements_map(s,size), size, "add")
+    stoptime(lambda s=s : iterate_through_map(s), size, "iterating through")
+    stoptime(lambda s=s, size=size : lookup_nonexisting_map(s,size), size, "lookup nonexisting")
+    stoptime(lambda s=s, size=size : lookup_elements_map(s,size), size, "lookup existing")
+    stoptime(lambda s=s, size=size : delete_nonexisting_map(s,size), size, "delete nonexisting")
+    stoptime(lambda s=s, size=size : delete_elements_map(s,size), size, "delete existing")
+    
+    
+    print "\n######## done testing", name,"##################\n" 
      
