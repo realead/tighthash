@@ -9,13 +9,13 @@ import uttemplate
 from tighthash.TightSet  import TightHashMap as PMap
 
 import pyximport; pyximport.install()
-from tighthash.ctighthash  import TightHashSet as CSet
+from tighthash.ctighthash  import TightHashMap as CMap
 
 
-#@uttemplate.from_templates([PSet, CSet])    
+@uttemplate.from_templates([PMap, CMap])    
 class MapTester(unittest.TestCase):
         
-    def test_insert_zero(self,test_class=PMap):
+    def template_insert_zero(self,test_class=PMap):
         s=test_class(10)
         self.assertEquals(len(s), 0)
         s[0]=44

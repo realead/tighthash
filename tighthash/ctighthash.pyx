@@ -95,6 +95,9 @@ cdef class TightHashBase:
         if self.arr.data.as_ulongs[val_hash]==val:
             return True
         return False
+        
+        
+        
 
 cdef class TightHashSet(TightHashBase):
     
@@ -165,6 +168,27 @@ cdef class TightHashSet(TightHashBase):
            
         
   
+cdef class TightHashMap(TightHashBase): 
+    cdef array.array vals   
+    cdef unsigned long long int zero_val
+
+    def __init__(self, capacity=1000, min_factor=1.2, increase_factor=1.2):
+        TightHashBase.__init__(self, capacity, min_factor, increase_factor)  
+        self.zero_val=0
+        self.vals=create_arr(self.size)     
         
-        
-        
+    def __setitem__(self, key, val):
+        #the special case -> 0, in the array it means empty space
+        if not key:
+           self.contains_zero=True
+           self.zero_val=val
+           return       
+      
+    def __getitem__(self, key):
+        if not key:
+           if self.contains_zero==1:
+                return self.zero_val
+           else:
+                raise KeyError(key)
+                
+                        
