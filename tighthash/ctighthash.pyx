@@ -7,6 +7,8 @@ import math
 _primes=[419,421,431,463,467,557,563,569,673,677,683,691,701,709,719,727,733 ,739,743,751,773,787,797,809,811,821,823,827,829,839,853,857,859,863,877,881,947,953,967,971,977,983,991,997,1009,1013]
 
 
+ctypedef unsigned long long int ULLInt
+
 cdef class THSetIterator:
     cdef int __contains_zero
     cdef array.array __arr
@@ -176,19 +178,87 @@ cdef class TightHashMap(TightHashBase):
         TightHashBase.__init__(self, capacity, min_factor, increase_factor)  
         self.zero_val=0
         self.vals=create_arr(self.size)     
+     
+     
+    cdef realocate(self, new_minimal_size):
+        old_keys=self.arr
+        old_vals=self.vals
         
+        self.arr=create_arr(new_minimal_size)
+        self.vals=create_arr(new_minimal_size)
+        self.size=len(self.arr)
+        
+        
+        self.cnt=0
+        for i in xrange(len(old_keys)):
+            if old_keys.data.as_ulongs[i]!=0:
+                    self[old_keys.data.as_ulongs[i]]=old_vals.data.as_ulongs[i]
+        
+                  
     def __setitem__(self, key, val):
         #the special case -> 0, in the array it means empty space
         if not key:
            self.contains_zero=True
            self.zero_val=val
-           return       
+           return
+        
+        #if there is not enough place -> reallocate   
+        if(self.cnt*self.min_factor>self.size): 
+           self.realocate(int(math.ceil(self.size*self.increase_factor)))
+         
+        #all values except 0:
+        cdef ULLInt val_hash=self.get_hash(key)
+        
+        cdef ULLInt pos=self.find(val_hash, key)
+        cdef ULLInt cnt_change=0 
+        if  not self.arr[pos]:
+           cnt_change=1
+           self.arr[pos]=key
+                
+        self.vals[pos]=val
+        self.cnt+=cnt_change       
       
-    def __getitem__(self, key):
+    def __getitem__(self, key):     
         if not key:
            if self.contains_zero==1:
                 return self.zero_val
            else:
                 raise KeyError(key)
-                
+        #all values except 0:
+        cdef ULLInt val_hash=self.get_hash(key)      
+        cdef ULLInt pos=self.find(val_hash, key)
+        if not self.arr[pos]:
+            raise KeyError(key)
+        return self.vals[pos]
+ 
+ 
+    def __delitem__(self, key):
+        if key==0:
+             if self.contains_zero:
+                self.contains_zero=False
+                return
+             else:
+                raise KeyError(0)
+                        
+        cdef ULLInt val_hash=self.get_hash(key)  
+        cdef ULLInt pos=self.find(val_hash, key)
+        if not self.arr[pos]:
+            raise KeyError(key)  #not here!
+            
+        self.arr[pos]=0 #delete
+        self.cnt-=1
+        
+        #reorder the next values
+        #we are sure everything is OK only after meeting a 0
+        cdef ULLInt cur_key
+        cdef ULLInt cur_val
+        pos=self.move_pos(pos)
+        while self.arr[pos]:
+           cur_key=self.arr[pos]
+           cur_val=self.vals[pos]
+           self.cnt-=1
+           self.arr[pos]=0
+           self[cur_key]=cur_val
+           pos=self.move_pos(pos)
+               
                         
