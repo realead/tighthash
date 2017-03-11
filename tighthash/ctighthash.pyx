@@ -33,7 +33,15 @@ cdef class THSetIterator:
             if self.__arr.data.as_ulongs[self.__it-2]!=0:          
                 return self.__arr.data.as_ulongs[self.__it-2]
         
-
+#creates array of the given size and initializes it to 0       
+cdef create_arr(size):
+    cdef array.array arr
+    arr=array.array('L', [0])
+    array.resize(arr, size)
+    array.zero(arr)
+    return arr
+    
+    
 cdef class TightHashBase:
     cdef unsigned long long int cnt
     cdef double min_factor
@@ -48,16 +56,11 @@ cdef class TightHashBase:
         self.cnt=0
         self.min_factor=max(1.2, min_factor)
         self.increase_factor= max(1.2, increase_factor)
-        self.size=self.ini_array(int(math.ceil(capacity*self.min_factor)));
+        self.size=int(math.ceil(capacity*self.min_factor))
+        self.arr=create_arr(self.size)
         self.contains_zero=0
         self.mult=random.choice(_primes)
-        self._add=random.randint(100, 2000)
-
-    cdef ini_array(self, long long int minimal_size):
-        self.arr=array.array('L', [0])
-        array.resize(self.arr,minimal_size)
-        array.zero(self.arr)
-        return minimal_size
+        self._add=random.randint(100, 2000)  
         
     cdef move_pos(self, unsigned long long int pos):
         return 0 if pos==self.size-1 else pos+1
@@ -103,7 +106,8 @@ cdef class TightHashSet(TightHashBase):
     cdef __realocate(self, unsigned long long int new_minimal_size):
         old_arr=self.arr
         
-        self.size=self.ini_array(new_minimal_size)
+        self.arr=create_arr(new_minimal_size)
+        self.size=len(self.arr)
         
         self.cnt=0
         for i in xrange(len(old_arr)):
