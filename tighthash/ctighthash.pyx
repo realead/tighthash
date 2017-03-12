@@ -64,15 +64,15 @@ cdef class TightHashBase:
         self.mult=random.choice(_primes)
         self._add=random.randint(100, 2000)  
         
-    cdef move_pos(self, unsigned long long int pos):
+    cdef ULLInt move_pos(self, unsigned long long int pos):
         return 0 if pos==self.size-1 else pos+1
       
-    cdef find(self, unsigned long long int start, unsigned long long int item):
+    cdef ULLInt find(self, unsigned long long int start, unsigned long long int item):
         while self.arr.data.as_ulongs[start] and self.arr.data.as_ulongs[start]!=item:
             start=self.move_pos(start)
         return start 
       
-    cdef get_hash(self, unsigned long long int val):
+    cdef ULLInt get_hash(self, unsigned long long int val):
         return (self.mult*hash(val)+self._add)%self.size
                
     def __iter__(self):
@@ -192,12 +192,11 @@ cdef class TightHashMap(TightHashBase):
         self.cnt=0
         for i in xrange(len(old_keys)):
             if old_keys.data.as_ulongs[i]!=0:
-                    self[old_keys.data.as_ulongs[i]]=old_vals.data.as_ulongs[i]
+                 self.c_setitem(old_keys.data.as_ulongs[i], old_vals.data.as_ulongs[i])
         
-                  
-    def __setitem__(self, key, val):
+    cdef c_setitem(self,  ULLInt key,  ULLInt val):
         #the special case -> 0, in the array it means empty space
-        if not key:
+        if key==0:
            self.contains_zero=True
            self.zero_val=val
            return
@@ -211,14 +210,17 @@ cdef class TightHashMap(TightHashBase):
         
         cdef ULLInt pos=self.find(val_hash, key)
         cdef ULLInt cnt_change=0 
-        if  not self.arr[pos]:
+        if  self.arr.data.as_ulongs[pos]==0:
            cnt_change=1
-           self.arr[pos]=key
+           self.arr.data.as_ulongs[pos]=key
                 
-        self.vals[pos]=val
-        self.cnt+=cnt_change       
+        self.vals.data.as_ulongs[pos]=val
+        self.cnt+=cnt_change         
+           
+    def __setitem__(self,  ULLInt key,  ULLInt val):
+        self.c_setitem(key, val)   
       
-    def __getitem__(self, key):     
+    def __getitem__(self, ULLInt key):     
         if not key:
            if self.contains_zero==1:
                 return self.zero_val
@@ -227,12 +229,12 @@ cdef class TightHashMap(TightHashBase):
         #all values except 0:
         cdef ULLInt val_hash=self.get_hash(key)      
         cdef ULLInt pos=self.find(val_hash, key)
-        if not self.arr[pos]:
+        if self.arr.data.as_ulongs[pos]==0 :
             raise KeyError(key)
-        return self.vals[pos]
+        return self.vals.data.as_ulongs[pos]
  
  
-    def __delitem__(self, key):
+    def __delitem__(self, ULLInt key):
         if key==0:
              if self.contains_zero:
                 self.contains_zero=False
@@ -242,10 +244,10 @@ cdef class TightHashMap(TightHashBase):
                         
         cdef ULLInt val_hash=self.get_hash(key)  
         cdef ULLInt pos=self.find(val_hash, key)
-        if not self.arr[pos]:
+        if self.arr.data.as_ulongs[pos]==0:
             raise KeyError(key)  #not here!
             
-        self.arr[pos]=0 #delete
+        self.arr.data.as_ulongs[pos]=0 #delete
         self.cnt-=1
         
         #reorder the next values
@@ -253,12 +255,12 @@ cdef class TightHashMap(TightHashBase):
         cdef ULLInt cur_key
         cdef ULLInt cur_val
         pos=self.move_pos(pos)
-        while self.arr[pos]:
-           cur_key=self.arr[pos]
-           cur_val=self.vals[pos]
+        while self.arr.data.as_ulongs[pos]!=0:
+           cur_key=self.arr.data.as_ulongs[pos]
+           cur_val=self.vals.data.as_ulongs[pos]
            self.cnt-=1
-           self.arr[pos]=0
-           self[cur_key]=cur_val
+           self.arr.data.as_ulongs[pos]=0
+           self.c_setitem(cur_key, cur_val)
            pos=self.move_pos(pos)
                
                         
