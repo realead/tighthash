@@ -185,7 +185,7 @@ class TightHashMap(TightHashBase):
         val_hash=self.get_hash(key)
         
         pos=self.find(val_hash, key)
-        cnt_change=0 if self.arr[pos] else 1
+        cnt_change=0 
         if  not self.arr[pos]:
            cnt_change=1
            self.arr[pos]=key
