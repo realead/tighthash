@@ -24,3 +24,7 @@ $WRAPPER ./test_hash_set2 1000000
 $WRAPPER ./test_hash_set2 11000000
 
 
+rm test_hash_set
+rm test_hash_set2
+rm test_tree_set
+
