@@ -117,16 +117,16 @@ cdef class TightHashSet(TightHashBase):
         self.cnt=0
         for i in xrange(len(old_arr)):
             if old_arr.data.as_ulongs[i]!=0:
-                    self.add(old_arr.data.as_ulongs[i])
+                    self.cadd(old_arr.data.as_ulongs[i])
             
-    def add(self, unsigned long long int val):
+    cdef int cadd(self, unsigned long long int val):
         #the special case -> 0, in the array it means empty space
         if val==0:
             if self.contains_zero==1:
-                return False
+                return 0
             else:
                 self.contains_zero=1
-                return True
+                return 1
           
         #if there is not enough place -> reallocate   
         if(self.cnt*self.min_factor>self.size): 
@@ -137,12 +137,14 @@ cdef class TightHashSet(TightHashBase):
         cdef unsigned long long int val_hash=self.get_hash(val)
         val_hash=self.find(val_hash, val)
         if self.arr.data.as_ulongs[val_hash]:
-            return False #already in the set
+            return 0 #already in the set
         
         self.arr.data.as_ulongs[val_hash]=val
         self.cnt+=1
-        return True
+        return 1
         
+    def add(self, unsigned long long int val):
+        return self.cadd(val)
         
     def discard(self, unsigned long long int val):
        if val==0:
@@ -164,7 +166,7 @@ cdef class TightHashSet(TightHashBase):
            val=self.arr.data.as_ulongs[pos]
            self.cnt-=1
            self.arr.data.as_ulongs[pos]=0
-           self.add(val)
+           self.cadd(val)
            pos=self.move_pos(pos)
            
            
