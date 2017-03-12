@@ -45,13 +45,13 @@ cdef create_arr(size):
     
     
 cdef class TightHashBase:
-    cdef unsigned long long int cnt
+    cdef ULLInt cnt
     cdef double min_factor
     cdef double increase_factor
-    cdef unsigned long long int size
+    cdef ULLInt size
     cdef int contains_zero
-    cdef long long int mult
-    cdef long long int _add
+    cdef ULLInt mult
+    cdef ULLInt add
     cdef array.array arr
     
     def __init__(self,  capacity=1001, min_factor=1.2, increase_factor=1.2):
@@ -62,7 +62,7 @@ cdef class TightHashBase:
         self.arr=create_arr(self.size)
         self.contains_zero=0
         self.mult=random.choice(_primes)
-        self._add=random.randint(100, 2000)  
+        self.add=random.randint(100, 2000)  
         
     cdef ULLInt move_pos(self, unsigned long long int pos):
         return 0 if pos==self.size-1 else pos+1
@@ -73,7 +73,7 @@ cdef class TightHashBase:
         return start 
       
     cdef ULLInt get_hash(self, unsigned long long int val):
-        return (self.mult*hash(val)+self._add)%self.size
+        return (self.mult*val+self.add)%self.size
                
     def __iter__(self):
         return THSetIterator(self.contains_zero, self.arr)      
