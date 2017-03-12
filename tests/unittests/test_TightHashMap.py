@@ -163,6 +163,17 @@ class MapTester(unittest.TestCase):
         for x in xrange(22,33):
             with self.assertRaises(KeyError) as context:
                 del s[x]
-            self.assertEquals(x, context.exception.args[0])   
+            self.assertEquals(x, context.exception.args[0]) 
+            
+            
+            
+    def template_overwrite_item_no_relocation(self, test_class=PMap):
+        s=test_class(1)
+        self.assertEquals(s.get_preallocated_size(),2)
+        s[2]=2
+        self.assertEquals(s.get_preallocated_size(),2)
+        s[2]=3
+        self.assertEquals(s.get_preallocated_size(),2)      
+        self.assertEquals(len(s),1)   
         
                                                 
