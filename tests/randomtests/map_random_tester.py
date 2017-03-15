@@ -119,8 +119,7 @@ def test_cases(map_type):
 import sys
 sys.path.append('..')
 
-import pyximport; pyximport.install()
-from tighthash.ctighthash  import TightHashMap as cmap
+from tighthash import pmap, cmap
 
 print "Testing cmap..."
 wrong, cnt=test_cases(cmap)
@@ -129,8 +128,6 @@ if not wrong:
 else:
     print "%d errors for %d cmap tests!"%(wrong, cnt)
     
-    
-from tighthash.TightSet  import TightHashMap as pmap
 
 print "Testing pmap..."
 wrong, cnt=test_cases(pmap)

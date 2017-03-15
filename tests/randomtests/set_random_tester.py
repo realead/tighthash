@@ -100,8 +100,7 @@ def test_cases(set_type):
 import sys
 sys.path.append('..')
 
-import pyximport; pyximport.install()
-from tighthash.ctighthash  import TightHashSet as cset
+from tighthash import pset, cset
 
 
 print "Testing cset..."
@@ -112,8 +111,6 @@ else:
     print "%d errors for %d cset tests!"%(wrong, cnt)
     
     
-    
-from tighthash.TightSet  import TightHashSet as pset
 print "Testing pset..."
 wrong, cnt=test_cases(pset)
 if not wrong:

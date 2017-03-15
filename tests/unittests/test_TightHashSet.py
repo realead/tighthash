@@ -6,13 +6,9 @@ sys.path.append('../uttemplate/uttemplate')
 
 import uttemplate
 
-from tighthash.TightSet  import TightHashSet as PSet
+from tighthash  import pset, cset
 
-import pyximport; pyximport.install()
-from tighthash.ctighthash  import TightHashSet as CSet
-
-
-@uttemplate.from_templates([PSet, CSet])    
+@uttemplate.from_templates([pset, cset])    
 class TesterTemplate(unittest.TestCase):
         
     def template_len(self,test_class):

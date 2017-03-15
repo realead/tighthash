@@ -6,23 +6,21 @@ sys.path.append('../uttemplate/uttemplate')
 
 import uttemplate
 
-from tighthash.TightSet  import TightHashMap as PMap
-
-import pyximport; pyximport.install()
-from tighthash.ctighthash  import TightHashMap as CMap
+from tighthash import pmap, cmap
 
 
-@uttemplate.from_templates([PMap, CMap])    
+
+@uttemplate.from_templates([pmap, cmap])    
 class MapTester(unittest.TestCase):
         
-    def template_insert_zero(self,test_class=PMap):
+    def template_insert_zero(self,test_class):
         s=test_class(10)
         self.assertEquals(len(s), 0)
         s[0]=44
         self.assertEquals(len(s), 1)
         self.assertTrue(0 in s)
 
-    def template_insert_no_realoc(self,test_class=PMap):
+    def template_insert_no_realoc(self,test_class):
         s=test_class(10)
         for x in xrange(1,11):
             s[x]=x       
@@ -30,7 +28,7 @@ class MapTester(unittest.TestCase):
         for x in xrange(1,11):
             self.assertTrue(x in s)
             
-    def template_insert_no_realoc_with_zero(self,test_class=PMap):
+    def template_insert_no_realoc_with_zero(self,test_class):
         s=test_class(11)
         for x in xrange(0,11):
             s[x]=x         
@@ -38,7 +36,7 @@ class MapTester(unittest.TestCase):
         for x in xrange(0,11):
             self.assertTrue(x in s)
             
-    def template_not_in(self,test_class=PMap):
+    def template_not_in(self,test_class):
         s=test_class(11)
         for x in xrange(0,11):
             self.assertFalse(x in s)    
@@ -48,7 +46,7 @@ class MapTester(unittest.TestCase):
         self.assertTrue(0 in s)
         
 
-    def template_insert_with_realoc(self,test_class=PMap):
+    def template_insert_with_realoc(self,test_class):
         s=test_class(4)
         for x in xrange(10):
             s[x]=x       
@@ -57,7 +55,7 @@ class MapTester(unittest.TestCase):
             self.assertTrue(x in s)  
             
             
-    def template_get_item_zero(self,test_class=PMap):
+    def template_get_item_zero(self,test_class):
         s=test_class(4)
         s[0]=100 
         self.assertEquals(s[0], 100)
@@ -65,14 +63,14 @@ class MapTester(unittest.TestCase):
         self.assertEquals(s[0], 200)   
             
             
-    def template_get_item_zero_throws(self,test_class=PMap):
+    def template_get_item_zero_throws(self,test_class):
         s=test_class(4)
         with self.assertRaises(KeyError) as context:
            x=s[0]
         
         self.assertEquals(0, context.exception.args[0])  
            
-    def template_get_item_nonzero(self,test_class=PMap):
+    def template_get_item_nonzero(self,test_class):
         s=test_class(4)
         for x in xrange(1,10):
            s[x]=x+22
@@ -80,7 +78,7 @@ class MapTester(unittest.TestCase):
         for x in xrange(1,10):
            self.assertEquals(s[x], x+22)
            
-    def template_get_item_nonzero_throws(self,test_class=PMap):
+    def template_get_item_nonzero_throws(self,test_class):
         s=test_class(4)
         for x in xrange(1,10):
             s[x]=x+22
@@ -91,7 +89,7 @@ class MapTester(unittest.TestCase):
             self.assertEquals(x, context.exception.args[0])   
             
             
-    def template_iterate_with_zero(self, test_class=PMap):
+    def template_iterate_with_zero(self, test_class):
         s=test_class(10)
         for x in xrange(50):
           s[x]=x+33
@@ -108,7 +106,7 @@ class MapTester(unittest.TestCase):
           
           
           
-    def template_iterate_without_zero(self, test_class=PMap):
+    def template_iterate_without_zero(self, test_class):
         s=test_class(10)
         for x in xrange(1,51):
           s[x]=x+44
@@ -124,7 +122,7 @@ class MapTester(unittest.TestCase):
           self.assertTrue( (x, x+44) in test_list) 
           
           
-    def template_delitem(self, test_class=PMap):
+    def template_delitem(self, test_class):
         s=test_class(10)
         for x in xrange(1,11):
           s[x]=x+44
@@ -139,7 +137,7 @@ class MapTester(unittest.TestCase):
         self.assertEquals(len(s), 1)
                
              
-    def template_delitem_zero(self, test_class=PMap):
+    def template_delitem_zero(self, test_class):
         s=test_class(10)
         s[0]=0
         self.assertTrue(0 in s)
@@ -147,13 +145,13 @@ class MapTester(unittest.TestCase):
         self.assertFalse(0 in s)
         self.assertEquals(len(s), 0)        
             
-    def template_delitem_zero_throws(self, test_class=PMap):
+    def template_delitem_zero_throws(self, test_class):
         s=test_class(4)
         with self.assertRaises(KeyError) as context:
              del s[0]
         self.assertEquals(0, context.exception.args[0])     
         
-    def template_delitem_throws(self, test_class=PMap):
+    def template_delitem_throws(self, test_class):
         s=test_class(4)
         for x in xrange(1,11):
           s[x]=x+44
@@ -167,7 +165,7 @@ class MapTester(unittest.TestCase):
             
             
             
-    def template_overwrite_item_no_relocation(self, test_class=PMap):
+    def template_overwrite_item_no_relocation(self, test_class):
         s=test_class(1)
         self.assertEquals(s.get_preallocated_size(),2)
         s[2]=2
