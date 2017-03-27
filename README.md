@@ -78,8 +78,9 @@ It is very similar for the map, with cmap loosing a little bit more ground again
 
 If the faster cmap/cset classes should be used:
 
-    1. cython
-    2. python-dev package (*sudo apt-get install python-dev* or similar)
+   1. cython
+   2. python-dev package (*sudo apt-get install python-dev* or similar)
+   3. for unit tests the submodule uttemplate should be fetched. Thus use    `git clone --recursive` or if already cloned `git submodule init` + `git submodule update`
     
 ### Build
 
