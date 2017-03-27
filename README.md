@@ -79,6 +79,7 @@ It is very similar for the map, with cmap loosing a little bit more ground again
 If the faster cmap/cset classes should be used:
 
     1. cython
+    2. python-dev package (*sudo apt-get install python-dev* or similar)
     
 ### Build
 
